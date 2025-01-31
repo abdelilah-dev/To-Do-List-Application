@@ -6,6 +6,9 @@ let taskDetailWindow = document.querySelector(".task-detail-window")
 
 let arrayOfTasks = [];
 
+let newDate = JSON.parse(JSON.stringify(new Date()));
+newDate = newDate.slice(0, newDate.indexOf("T")).split("-").reverse().join(" / ");
+document.querySelector(".date").innerHTML = newDate;
 
 // check if i have an old data in my localStorage
 if (window.localStorage.tasks) {
@@ -33,8 +36,10 @@ tasksContainer.addEventListener("click", function (ele) {
     if (ele.target.className === "done-btn") {
         loadingScene();
         let geteleid = ele.target.parentElement.parentElement.getAttribute("data-id");
-        ele.target.parentElement.parentElement.classList.toggle("done");
+        let taskElement = ele.target.parentElement.parentElement;
         modifyData(geteleid);
+        modigyByComplated(geteleid, taskElement);
+        ele.target.parentElement.parentElement.classList.toggle("done");
     }
     if (ele.target.className === "delete-btn") {
         let geteleid = ele.target.parentElement.parentElement.getAttribute("data-id");
@@ -119,7 +124,7 @@ function createTask(taskTitle, taskcontent) {
         date: new Date(),
         content: taskcontent,
     };
-    arrayOfTasks.push(task);
+    arrayOfTasks.unshift(task);
     addAllTasks();
 }
 
@@ -155,7 +160,24 @@ function modifyData(taskid) {
     }
     window.localStorage.tasks = JSON.stringify(arrayOfTasks);
 }
-
+function modigyByComplated(taskId, taskElement) {
+    console.log(taskElement.classList.contains("done"));
+    let index = 0;
+    let ele;
+    if (!taskElement.classList.contains("done")) {
+        for (let i in arrayOfTasks) {
+            if (arrayOfTasks[i].id == taskId) {
+                ele = arrayOfTasks[i];
+                index = i;
+            }
+        }
+        arrayOfTasks = arrayOfTasks.filter(function (ele, i) {
+            return ele != arrayOfTasks[index];
+        })
+        arrayOfTasks.push(ele);
+    }
+    addAllTasks();
+}
 function modifyTitleAndContent(taskTitle, taskContent, taskId) {
     for (let i = 0; i < arrayOfTasks.length; i++) {
         if (arrayOfTasks[i].id == taskId) {

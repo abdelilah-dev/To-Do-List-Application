@@ -26,13 +26,21 @@ body {
         width: 90%;
     }
 }
-
-.container h2 {
-    font-size: 22px;
-    font-weight: 700;
+.container .heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 1rem;
 }
-
+.container .heading h2 {
+    font-size: 22px;
+    font-weight: 700;
+}
+.container .heading p {
+    color: black;
+    font-size: 14px;
+    font-weight: bold;
+}
 .container .form {
     width: 100%;
     background: #eee;
