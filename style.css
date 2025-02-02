@@ -157,32 +157,34 @@ body {
     text-decoration: line-through;
 }
 
-.tasks-container li .btns {
+.btns {
     display: flex;
     align-items: center;
     justify-content: end;
     gap: 0.4rem;
     flex-wrap: wrap;
-
 }
 
-.tasks-container li .btns span {
+.btns span {
     padding: 4px 8px;
     border-radius: 4px;
     color: white;
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
+    text-align: center;
 }
 
-.tasks-container li .btns .delete-btn {
+.btns .delete-btn {
     background-color: var(--red-color);
-    text-decoration: none;
 }
 
-.tasks-container li .btns .done-btn {
+.done-btn {
     background-color: var(--blue-color);
-    text-decoration: none !important;
+    width: 64px;
+}
+.save-btn {
+    background-color: green;
     width: 64px;
 }
 

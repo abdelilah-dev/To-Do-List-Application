@@ -1,8 +1,9 @@
 let input = document.querySelector(".input");
 let contentTask = document.querySelector(".content");
 let addBtn = document.querySelector(".add");
-let tasksContainer = document.querySelector(".tasks-container")
-let taskDetailWindow = document.querySelector(".task-detail-window")
+let tasksContainer = document.querySelector(".tasks-container");
+let taskDetailWindow = document.querySelector(".task-detail-window");
+let taskDetail = document.querySelector(".task-detail");
 
 let arrayOfTasks = [];
 
@@ -27,6 +28,7 @@ addBtn.onclick = function () {
         input.parentElement.style.outline = "2px solid blue";
         input.value = "";
         contentTask.value = "";
+        loadingScene();
     } else {
         input.parentElement.style.outline = "2px solid red";
     }
@@ -62,13 +64,35 @@ taskDetailWindow.addEventListener("click", function (ele) {
     if (ele.target.classList.contains("task-detail-window")) {
         loadingScene();
         let getid = ele.target.getAttribute("data-id");
-        let title = document.querySelector(".taskTitle");
-        let content = document.querySelector(".taskContent");
-        modifyTitleAndContent(title.value, content.value, getid);
-        taskDetailWindow.classList.remove("active");
-        taskDetailWindow.innerHTML = "";
+        closeDetailWindow(getid);
     }
 })
+
+taskDetail.addEventListener("click", function (ele) {
+    if (ele.target.className === "done-btn") {
+        let geteleid = ele.target.parentElement.parentElement.parentElement.getAttribute("data-id");
+        modifyData(geteleid);
+        closeDetailWindow(geteleid);
+        loadingScene();
+    } else if (ele.target.className === "delete-btn") {
+        let geteleid = ele.target.parentElement.parentElement.parentElement.getAttribute("data-id");
+        removeData(geteleid);
+        closeDetailWindow(geteleid);
+    } else if (ele.target.className === "save-btn") {
+        let geteleid = ele.target.parentElement.parentElement.parentElement.getAttribute("data-id");
+        closeDetailWindow(geteleid);
+        loadingScene();
+    }
+})
+
+// close detail window and save data and update list 
+function closeDetailWindow(elementId) {
+    let title = document.querySelector(".taskTitle");
+    let content = document.querySelector(".taskContent");
+    modifyTitleAndContent(title.value, content.value, elementId);
+    taskDetailWindow.classList.remove("active");
+    taskDetail.innerHTML = "";
+}
 
 function addTaskToPage(taskTitle, taskId, taskDate, complated = false) {
     // create loading Scene first 
@@ -161,7 +185,6 @@ function modifyData(taskid) {
     window.localStorage.tasks = JSON.stringify(arrayOfTasks);
 }
 function modigyByComplated(taskId, taskElement) {
-    console.log(taskElement.classList.contains("done"));
     let index = 0;
     let ele;
     if (!taskElement.classList.contains("done")) {
@@ -197,9 +220,6 @@ function loadingScene() {
 }
 
 function createtaskDetail(taskTitle, taskContent, taskDate, taskId) {
-    let taskDetail = document.createElement("div");
-    taskDetail.className = "task-detail";
-
     let div = document.createElement("div");
     let title = document.createElement("input");
     title.className = "taskTitle";
@@ -223,9 +243,25 @@ function createtaskDetail(taskTitle, taskContent, taskDate, taskId) {
     content.value = taskContent;
     title.placeholder = "Task Content...";
 
+    let btns = document.createElement("div");
+    btns.className = "btns";
+    let donebtn = document.createElement("span");
+    donebtn.appendChild(document.createTextNode("Done"));
+    donebtn.className = "done-btn";
+    let deletebtn = document.createElement("span");
+    deletebtn.appendChild(document.createTextNode("Delete"));
+    deletebtn.className = "delete-btn";
+    let savebtn = document.createElement("span");
+    savebtn.appendChild(document.createTextNode("Save"));
+    savebtn.className = "save-btn";
+
+    btns.appendChild(donebtn);
+    btns.appendChild(deletebtn);
+    btns.appendChild(savebtn);
+
     taskDetail.appendChild(div);
     taskDetail.appendChild(content);
-    taskDetailWindow.appendChild(taskDetail);
+    taskDetail.appendChild(btns);
     taskDetailWindow.setAttribute("data-id", taskId);
 }
 function showTaskDetails(taskId) {
